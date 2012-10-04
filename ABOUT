@@ -1,0 +1,5 @@
+ti-player is an open source simple movie player client that receives input
+from a ti-manager instance based on web2py.
+
+Created by Andre Albuquerque <andre.m.de.albuquerque@gmail.com>
+
