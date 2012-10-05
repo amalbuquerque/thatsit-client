@@ -8,6 +8,9 @@ build
 eggs
 parts
 bin
+databases/*.log
+errors/*
+sessions/*
 var
 sdist
 develop-eggs

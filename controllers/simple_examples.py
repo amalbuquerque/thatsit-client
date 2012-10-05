@@ -1,7 +1,7 @@
 def hello1():
     """ simple page without template """
 
-    return 'Hello World'
+    return "Hello World!"
 
 
 def hello2():
@@ -11,13 +11,13 @@ def hello2():
 
 
 def hello3():
-    """ page rendered by template simple_examples/index3.html or generic.html"""
+    """ page rendered by template simple_examples/hello3.html or generic.html"""
 
     return dict(message='Hello World')
 
 
 def hello4():
-    """ page rendered by template simple_examples/index3.html or generic.html"""
+    """ page rendered by template simple_examples/hello4.html or generic.html"""
 
     response.view = 'simple_examples/hello3.html'
     return dict(message=T('Hello World'))
@@ -32,6 +32,7 @@ def hello5():
 def hello6():
     """ page rendered with a flash"""
 
+    response.view = "simple_examples/hello3.html"
     response.flash = 'Hello World in a flash!'
     return dict(message=T('Hello World'))
 
