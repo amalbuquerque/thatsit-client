@@ -1,0 +1,13 @@
+{{extend 'layout.html'}}
+<script>
+    var FU_uploadURL = '{{=URL("upload")}}';
+    var FU_msgTypeError = "{file} {{=T('has invalid extension.')}} {{=T('Only')}} {extensions} {{=T('are allowed.')}}";
+    var FU_msgSizeError = "{file} {{=T('is too large, maximum file size is')}} {sizeLimit}.";
+    var FU_msgMinSizeError = "{file} {{=T('is too small, minimum file size is')}} {minSizeLimit}.";
+    var FU_msgEmptyError = "{file} {{=T('is empty, please select files again without it.')}}";
+    var FU_msgOnLeave = "{{=T('The files are being uploaded, if you leave now the upload will be cancelled.')}}";
+</script>
+<h1>{{=message}}</h1>
+<div id="file-uploader">
+<noscript><p>{{=T('Please enable JavaScript to use file uploader.')}}</p></noscript>
+</div>

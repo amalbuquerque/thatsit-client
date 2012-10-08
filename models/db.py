@@ -12,6 +12,7 @@ db.define_table(
     # in seconds
     Field('time', 'integer', notnull=True),
     Field('position', 'integer'),
+    Field('file', 'upload'),
     Field('uploader', notnull=True),
     Field('timestamp', 'datetime', notnull=True),
     # how records of this table should be represented

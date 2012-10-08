@@ -49,3 +49,23 @@ def manager_upload_spot():
         finally:
             f.close()
 
+def upload_example():
+    response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
+    response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
+    response.files.append(URL(r=request, c='static/js/thatsit/global', f='use_fileuploader.js'))
+    return dict(message = "abcd")
+
+def upload():
+    try:
+        response.files.append(URL(r=request, c='static', f='fileuploader.css'))
+        for r in request.vars:
+            if r=="qqfile":
+                filename = request.vars.qqfile
+                # process the file here
+                gen_filename = db.spot.file.store(request.body, filename)
+                # db.document.insert(file=db.spot.file.store(request.body,filename))
+                return response.json({'success': 'true',\
+                        'upl_file' : filename,\
+                        'new_file' : gen_filename})
+    except:
+        return response.json({'success': 'false'})
