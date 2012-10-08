@@ -9,6 +9,7 @@ eggs
 parts
 bin
 databases/*.log
+uploads/*
 errors/*
 sessions/*
 var
