@@ -22,15 +22,6 @@ def check1():
 # Adaptar o para utilizar
 # com um Ajax uploader
 def manager_upload_spot():
-    """
-    Permite utilizador fazer o upload de um spot e de
-    criar a BE correspondente na BD. Sera implementado
-    do lado do manager.
-    1. Guarda ficheiro nos uploads
-    2. Converte o movie para .swf
-    3. Invoca o WebService do Cliente para fazer o upload
-       do filme
-    """
     import gluon.contrib.simplejson as sj
     import os
 
@@ -41,11 +32,12 @@ def manager_upload_spot():
     else:
         variables = request.vars
         data = variables.qqfile.value
-        f = open(os.path.join(settings.movies_path, received_filename), "wb")
+        path_to_write = os.path.join(settings.movies_path, received_filename)
+        f = open(path_to_write, "wb")
         try:
             # TODO: Verificar se chega no formato esperado
             data = base64.b64decode(data)
-            f.write(data)
+            bytes_wrote = f.write(data)
         finally:
             f.close()
 
@@ -53,16 +45,30 @@ def upload_example():
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
     response.files.append(URL(r=request, c='static/js/thatsit/global', f='use_fileuploader.js'))
+    logger.debug("DEBUG WELL")
+    logger.warning("WARNING WELL")
     return dict(message = "abcd")
 
 def upload():
+    """
+    Permite utilizador fazer o upload de um spot e de
+    criar a BE correspondente na BD. Sera implementado
+    do lado do manager.
+    1. Guarda ficheiro nos uploads
+    2. Converte o movie para .swf
+    3. Invoca o WebService do Cliente para fazer o upload
+       do filme
+    """
     try:
-        response.files.append(URL(r=request, c='static', f='fileuploader.css'))
         for r in request.vars:
             if r=="qqfile":
                 filename = request.vars.qqfile
                 # process the file here
                 gen_filename = db.spot.file.store(request.body, filename)
+                logger.debug("Wrote {} bytes to {}"\
+                        .format(len(request.body), filename))
+                logger.warning("*Warning*Wrote {} bytes to {}"\
+                        .format(len(request.body), filename))
                 # db.document.insert(file=db.spot.file.store(request.body,filename))
                 return response.json({'success': 'true',\
                         'upl_file' : filename,\
