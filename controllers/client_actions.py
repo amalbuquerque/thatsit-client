@@ -19,28 +19,6 @@ def check1():
     return "I think I've found something: {0}-{1} by {2} @ {3}".format( \
             xpto_spot.id, xpto_spot.filename, xpto_spot.uploader, xpto_spot.timestamp)
 
-# Adaptar o para utilizar
-# com um Ajax uploader
-def manager_upload_spot():
-    import gluon.contrib.simplejson as sj
-    import os
-
-    received_filename = request.args(0)
-    xpto_spot = get(db.spot, filename=received_filename)
-    if (xpto_spot != None):
-        return sj.dumps({"success": "false"})
-    else:
-        variables = request.vars
-        data = variables.qqfile.value
-        path_to_write = os.path.join(settings.movies_path, received_filename)
-        f = open(path_to_write, "wb")
-        try:
-            # TODO: Verificar se chega no formato esperado
-            data = base64.b64decode(data)
-            bytes_wrote = f.write(data)
-        finally:
-            f.close()
-
 def upload_example():
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
