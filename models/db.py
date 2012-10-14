@@ -12,7 +12,7 @@ db.define_table(
     # in seconds
     Field('time', 'integer', notnull=True),
     Field('position', 'integer'),
-    Field('file', 'upload'),
+    Field('movie', 'upload'),
     Field('uploader', notnull=True),
     Field('timestamp', 'datetime', notnull=True),
     # how records of this table should be represented
@@ -64,8 +64,13 @@ def update_or_create(table, fields, updatefields):
 	"""
 	row = table(**fields)
 	if row:
+		logger.debug("Row existed. Updating")
 		row.update_record(**updatefields)
 	else:
+		logger.debug("New row. Inserting")
 		fields.update(updatefields)
 		row = table.insert(**fields)
 	return row
+
+def delete(table, **keys_to_search):
+    return table.delete(**keys_to_search)

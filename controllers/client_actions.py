@@ -19,12 +19,14 @@ def check1():
     return "I think I've found something: {0}-{1} by {2} @ {3}".format( \
             xpto_spot.id, xpto_spot.filename, xpto_spot.uploader, xpto_spot.timestamp)
 
+def log_test():
+    logger.debug("DEBUG WELL")
+    logger.warning("WARNING WELL")
+
 def upload_example():
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
     response.files.append(URL(r=request, c='static/js/thatsit/global', f='use_fileuploader.js'))
-    logger.debug("DEBUG WELL")
-    logger.warning("WARNING WELL")
     return dict(message = "abcd")
 
 def upload():
