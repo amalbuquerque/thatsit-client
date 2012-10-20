@@ -42,7 +42,7 @@ def upload(filename, description, time, position,\
         to_return = to_return + str(len(converted))\
                 + " bytes converted on " + path_to_write
     except:
-        to_return = to_return + "[ERROR]"
+        return to_return + "[ERROR]"
 
     # guarda na pasta onde ficam os ficheiros
     # recebidos
@@ -57,4 +57,18 @@ def upload(filename, description, time, position,\
     logger.debug("Saved upload: {}".\
             format(get(db.spot,filename=filename).movie))
 
+    return to_return
+
+@service.soap('ThatsitList', returns={'result':db.spot},
+        args={'filename':str})
+def upload(filename):
+    import base64
+    import os
+    import cStringIO
+    from datetime import datetime
+    #to_return = "Received: {0},{1},{2},{3},{4};".\
+    #        format(filename, description, time,\
+    #        position, uploader)
+    #to_return = to_return + "Raw "
+    to_return = get(db.spot,filename=filename)
     return to_return
