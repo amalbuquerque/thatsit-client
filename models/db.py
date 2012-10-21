@@ -1,6 +1,7 @@
 #########################################################################
 ## This scaffolding model makes your app work on Google App Engine too
 #########################################################################
+from gluon.contrib import simplejson as json
 
 # use SQLite
 db = DAL('sqlite://storage.sqlite')
@@ -31,12 +32,34 @@ def get(table, **fields):
 	Returns record from table with passed field values.
 	'table' is a DAL table reference, such as 'db.spot'
 	fields are field=value pairs
+    Returns only first row with the given criteria
     Example:
-        xpto_spot = get_or_create(db.spot, filename="xptoone.swf", \
-                description="", time=30, position=2, uploader="admin", \
-                timestamp = datetime.now()
+        xpto_spot = get(db.spot, filename="xptoone.swf", \
+                description="", time=30, position=2, uploader="admin")
 	"""
 	return table(**fields)
+
+def get_json(table, **fields):
+    to_return = get(table, **fields)
+    json_to_return = None
+    if(table == db.spot):
+        json_to_return = get_json_spot(to_return)
+
+    if(json_to_return != None):
+        return json.dumps(json_to_return)
+
+    return to_return
+
+def get_json_spot(to_return):
+    if(to_return == None):
+        return dict()
+    return dict(\
+        filename=to_return.filename,\
+        description=to_return.description,\
+        time=to_return.time,\
+        position=to_return.position,\
+        uploader=to_return.uploader,\
+        timestamp=str(to_return.timestamp))
 
 def get_or_create(table, **fields):
 	"""
@@ -47,7 +70,7 @@ def get_or_create(table, **fields):
     Example:
         xpto_spot = get_or_create(db.spot, filename="xptoone.swf", \
                 description="", time=30, position=2, uploader="admin", \
-                timestamp = datetime.now()
+                timestamp = datetime.now())
 	"""
 	return table(**fields) or table.insert(**fields)
 

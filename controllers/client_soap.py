@@ -1,4 +1,5 @@
 from gluon.tools import Service
+
 service = Service()
 
 def call():
@@ -59,16 +60,20 @@ def upload(filename, description, time, position,\
 
     return to_return
 
-@service.soap('ThatsitList', returns={'result':db.spot},
+@service.soap('ThatsitGet', returns={'result':str},
         args={'filename':str})
-def upload(filename):
-    import base64
-    import os
-    import cStringIO
-    from datetime import datetime
-    #to_return = "Received: {0},{1},{2},{3},{4};".\
-    #        format(filename, description, time,\
-    #        position, uploader)
-    #to_return = to_return + "Raw "
+def get(filename):
     to_return = get(db.spot,filename=filename)
-    return to_return
+    json_return = get_json(db.spot,filename=filename)
+    logger.debug("json to return: {}".format(json_return))
+    return json_return
+
+@service.soap('ThatsitList', returns={'result':str}, args={'invoker':str})
+def list(invoker):
+    set_to_return = db().select(db.spot.ALL, orderby=db.spot.position)
+    result = []
+    for r in set_to_return:
+        result.append(get_json_spot(r))
+
+    logger.debug("json to return: {}".format(json.dumps(result)))
+    return json.dumps(result)
