@@ -23,6 +23,20 @@ def log_test():
     logger.debug("DEBUG WELL")
     logger.warning("WARNING WELL")
 
+def get_benfica_rss():
+    import gluon.contrib.feedparser as feedparser
+    d = feedparser.parse(
+        "http://feeds.record.xl.pt/?idcanal=11")
+    return dict(title=d.channel.title,
+                link = d.channel.link,
+                description = d.channel.description,
+                created_on = request.now,
+                entries = [
+                  dict(title = entry.title,
+                  link = entry.link,
+                  description = entry.description,
+                  created_on = request.now) for entry in d.entries])
+
 def upload_example():
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))

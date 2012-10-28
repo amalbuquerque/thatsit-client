@@ -3,6 +3,8 @@
 #########################################################################
 from gluon.contrib import simplejson as json
 
+response.generic_patterns = ['*']
+
 # use SQLite
 db = DAL('sqlite://storage.sqlite')
 
