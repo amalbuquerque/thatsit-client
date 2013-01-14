@@ -37,13 +37,33 @@ def get_benfica_rss():
                   description = entry.description,
                   created_on = request.now) for entry in d.entries])
 
-def upload_example():
+def upload_example_old():
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
     response.files.append(URL(r=request, c='static/js/thatsit/global', f='use_fileuploader.js'))
-    return dict(message = "abcd")
 
-def upload():
+    form = FORM(TABLE(
+        TR('Filename:', INPUT(_type='text', _name='arg_filename',
+           requires=IS_NOT_EMPTY())),
+        TR('Description:', TEXTAREA(_name='arg_description',
+           value='write something here')),
+        TR('Time (in secs):', INPUT(_type='int', _name='arg_time',
+           requires=IS_NOT_EMPTY(), value=20)),
+        TR('Position:', INPUT(_type='int', _name='arg_position',
+           requires=IS_NOT_EMPTY(), value=0)),
+        TR('Your email:', INPUT(_type='text', _name='email',
+           requires=IS_EMAIL())),
+        TR('Admin', INPUT(_type='checkbox', _name='admin')),
+        TR('Sure?', SELECT('yes', 'no', _name='sure',
+           requires=IS_IN_SET(['yes', 'no']))),
+        TR('Profile', TEXTAREA(_name='profile',
+           value='write something here')),
+        TR('', INPUT(_type='submit', _value='SUBMIT')),
+        ))
+
+    return dict(message = "test message from controller", form=form)
+
+def upload_old():
     """
     Permite utilizador fazer o upload de um spot e de
     criar a BE correspondente na BD. Sera implementado
