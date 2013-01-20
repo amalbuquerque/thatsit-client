@@ -1,10 +1,11 @@
+from datetime import datetime
+
 def hello1():
     """ simple page without template """
 
     return "Hello World! Movies: " + settings.movies_path
 
 def create1():
-    from datetime import datetime
     xpto_spot = get_or_create(db.spot, filename=request.vars.name, \
             description="", time=30, position=2, uploader="admin", \
             timestamp = datetime.now())
@@ -37,7 +38,51 @@ def get_benfica_rss():
                   description = entry.description,
                   created_on = request.now) for entry in d.entries])
 
+def upload():
+    """
+    Action utilizada inicialmente para apresentar
+    o Form, e onde este vem bater depois de submetido.
+    (seja operação de INSERT ou DELETE)
+    """
+    # record = db.spot(request.args(0)) or redirect(URL('index'))
+    # tenta obter o spot com id passado por querystring: /id
+    # se nao existir, fica como None e o SQLFORM sera um INSERT
+    # form, se existir sera um UPDATE form
+    logger.debug("UPLOAD CALLED")
+    record = db.spot(request.args(0))
+    form = SQLFORM(db.spot, record, deletable=False, upload=URL('download'),\
+            submit_button='Gravar',\
+            # campos que queremos que sejam apresentados
+            fields=['description', 'time', 'position', 'movie', 'uploader'])
+
+    # record == None entao nao existia anteriormente
+    # na BD
+    if request.vars.movie != None and record == None:
+        logger.debug("Uploaded a file *{}* with {} bytes"\
+                .format(request.vars.movie.filename,\
+                len(request.vars.movie.value)))
+        # filename e preenchido pela action
+        form.vars.filename = request.vars.movie.filename
+        form.vars.timestamp = datetime.now()
+
+    if form.process().accepted:
+        response.flash = 'form accepted'
+    elif form.errors:
+        response.flash = 'form has errors'
+    return dict(form=form)
+
+def download():
+    return response.download(request, db)
+
 def upload_example_old():
+    """
+    Renomeei em 2013/1/14 para old, para utilizar
+    o SQLFORM disponibilizado out-of-the-box pelo
+    web2py (permite nao guardar imediatamente na
+    BD, pelo que podemos em vez disso fazer o
+    upload via WebService para o cliente -
+    realizado nas actions upload_first() e upload_new()
+    """
     response.files.append(URL(r=request, c='static/js', f='fileuploader.js'))
     response.files.append(URL(r=request, c='static/css', f='fileuploader.css'))
     response.files.append(URL(r=request, c='static/js/thatsit/global', f='use_fileuploader.js'))
