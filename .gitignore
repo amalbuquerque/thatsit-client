@@ -12,6 +12,7 @@ databases/*
 uploads/*
 errors/*
 sessions/*
+cache/*
 var
 sdist
 develop-eggs
